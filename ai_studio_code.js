@@ -165,12 +165,9 @@ let currentOrder = []; // Stores the selected items and their quantities
 
 // --- 3. Autocomplete Functionality ---
 menuItemInput.addEventListener('input', function() {
-    console.log("Input event fired! Current value:", this.value); // <--- ADDED LINE
-
     const inputValue = this.value.toLowerCase();
     closeAllLists();
     if (!inputValue) {
-        console.log("Input value is empty, closing lists."); // <--- ADDED LINE
         return false;
     }
 
@@ -185,12 +182,9 @@ menuItemInput.addEventListener('input', function() {
         item.upc.includes(inputValue)
     );
 
-    console.log("Filtered items:", filteredItems.length, filteredItems); // <--- ADDED LINE
-
-    if (filteredItems.length === 0) { // <--- ADDED BLOCK
-        console.log("No matching items found."); // <--- ADDED LINE
-        return; // <--- ADDED LINE
-    } // <--- END ADDED BLOCK
+    if (filteredItems.length === 0) {
+        return;
+    }
 
 
     filteredItems.forEach(item => {
@@ -206,7 +200,6 @@ menuItemInput.addEventListener('input', function() {
         });
         a.appendChild(b);
     });
-    console.log("Autocomplete list rendered."); // <--- ADDED LINE
 });
 
 function closeAllLists(elmnt) {
