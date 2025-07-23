@@ -12,6 +12,15 @@
     <div class="order-form-container">
         <h1>Place Your Order</h1>
 
+        <!-- START: New Store Selector Dropdown -->
+        <div class="form-group">
+            <label for="store-selector">Select a Store Location</label>
+            <select id="store-selector" name="store">
+                <option value="" disabled selected>-- Please choose a store --</option>
+            </select>
+        </div>
+        <!-- END: New Store Selector Dropdown -->
+
         <div class="search-container">
             <input type="text" id="item-search" placeholder="Search for menu items...">
             <div id="autocomplete-results" class="autocomplete-results"></div>
