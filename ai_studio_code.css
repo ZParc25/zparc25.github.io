@@ -123,6 +123,10 @@ button:hover {
     background-color: #c82333;
 }
 
+.autocomplete {
+    position: relative;
+    display: block;
+}
 
 /* Autocomplete styling */
 .autocomplete-items {
