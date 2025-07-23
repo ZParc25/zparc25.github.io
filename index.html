@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Order Form</title>
+    <!-- This line links to your stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="order-form-container">
+        <h1>Place Your Order</h1>
+
+        <div class="search-container">
+            <input type="text" id="item-search" placeholder="Search for menu items...">
+            <div id="autocomplete-results" class="autocomplete-results"></div>
+        </div>
+
+        <!-- This is where selected items will be dynamically added by JavaScript -->
+        <div id="order-items"></div>
+
+        <div class="form-buttons">
+            <button id="add-more-btn">Add More</button>
+            <button id="review-submit-btn">Review and Submit</button>
+        </div>
+    </div>
+
+    <!-- This line links to your JavaScript file -->
+    <script src="script.js"></script>
+</body>
+</html>

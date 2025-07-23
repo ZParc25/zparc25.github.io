@@ -1,0 +1,133 @@
+/* General body styling */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Main container for the form */
+.order-form-container {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 25px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+/* Styling for the search bar container */
+.search-container {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+#item-search {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box; /* Ensures padding doesn't affect width */
+    font-size: 16px;
+}
+
+/* Container for the autocomplete dropdown results */
+.autocomplete-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-top: none;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    border-radius: 0 0 4px 4px;
+    display: none; /* Hidden by default */
+}
+
+/* Individual item in the autocomplete list */
+.autocomplete-results div {
+    padding: 12px;
+    cursor: pointer;
+}
+
+.autocomplete-results div:hover {
+    background-color: #f0f0f0;
+}
+
+/* Container for all the items added to the order */
+#order-items {
+    margin-top: 20px;
+}
+
+/* Styling for a single added order item */
+.order-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    background-color: #fafafa;
+}
+
+.order-item span {
+    flex-grow: 1;
+    font-size: 1.1em;
+}
+
+/* The quantity input that appears next to the item */
+.quantity-popup input {
+    width: 70px;
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-left: 15px;
+}
+
+/* Container for the main action buttons */
+.form-buttons {
+    margin-top: 30px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px; /* Adds space between buttons */
+}
+
+.form-buttons button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+#add-more-btn {
+    background-color: #007bff;
+    color: white;
+}
+
+#add-more-btn:hover {
+    background-color: #0056b3;
+}
+
+#review-submit-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+#review-submit-btn:hover {
+    background-color: #218838;
+}
