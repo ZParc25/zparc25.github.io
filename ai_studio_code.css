@@ -26,6 +26,7 @@ h1, h2 {
 
 .form-group {
     margin-bottom: 15px;
+    position: relative; /* Crucial for autocomplete positioning */
 }
 
 label {
