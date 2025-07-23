@@ -3,39 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Order Form</title>
-    <!-- This line links to your stylesheet -->
-    <link rel="stylesheet" href="style.css">
+    <title>Inventory Order Form</title>
+    <link rel="stylesheet" href="ai_studio_code.css">
 </head>
 <body>
+    <div class="container">
+        <h1>Inventory Order Form</h1>
 
-    <div class="order-form-container">
-        <h1>Place Your Order</h1>
+        <form id="orderForm">
+            <div class="form-group">
+                <label for="storeLocation">Store Location:</label>
+                <select id="storeLocation" required>
+                    <option value="">Select a Store</option>
+                    <option value="storeA">Store A</option>
+                    <option value="storeB">Store B</option>
+                    <option value="storeC">Store C</option>
+                </select>
+            </div>
 
-        <!-- START: New Store Selector Dropdown -->
-        <div class="form-group">
-            <label for="store-selector">Select a Store Location</label>
-            <select id="store-selector" name="store">
-                <option value="" disabled selected>-- Please choose a store --</option>
-            </select>
-        </div>
-        <!-- END: New Store Selector Dropdown -->
+            <div class="form-group">
+                <label for="menuItem">Add Item:</label>
+                <input type="text" id="menuItem" placeholder="Search for menu item..." autocomplete="off">
+                <div id="autocomplete-list" class="autocomplete-items"></div>
+            </div>
 
-        <div class="search-container">
-            <input type="text" id="item-search" placeholder="Search for menu items...">
-            <div id="autocomplete-results" class="autocomplete-results"></div>
-        </div>
+            <div class="form-group">
+                <label for="quantity">Quantity:</label>
+                <input type="number" id="quantity" value="1" min="1">
+            </div>
 
-        <!-- This is where selected items will be dynamically added by JavaScript -->
-        <div id="order-items"></div>
+            <button type="button" id="addItemBtn">Add to Order</button>
 
-        <div class="form-buttons">
-            <button id="add-more-btn">Add More</button>
-            <button id="review-submit-btn">Review and Submit</button>
-        </div>
+            <h2>Current Order:</h2>
+            <ul id="orderList">
+                </ul>
+
+            <button type="button" id="reviewSubmitBtn">Review and Submit Order</button>
+        </form>
     </div>
 
-    <!-- This line links to your JavaScript file -->
-    <script src="script.js"></script>
+    <script src="ai_studio_code.js"></script>
 </body>
 </html>
