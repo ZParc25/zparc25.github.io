@@ -1,3 +1,4 @@
+
 // --- 1. DATA: Your menu items (updated with SKU, Name, and UPC) ---
 const menuItems = [
     { sku: 'AMP0004', name: 'AMP 12oz Congo (WB)', upc: '8-54463-00818-5' },
@@ -165,9 +166,14 @@ let currentOrder = []; // Stores the selected items and their quantities
 
 // --- 3. Autocomplete Functionality ---
 menuItemInput.addEventListener('input', function() {
+    console.log("Input event fired! Current value:", this.value); // <--- ADDED LINE
+
     const inputValue = this.value.toLowerCase();
     closeAllLists();
-    if (!inputValue) { return false; }
+    if (!inputValue) {
+        console.log("Input value is empty, closing lists."); // <--- ADDED LINE
+        return false;
+    }
 
     let a = document.createElement("DIV");
     a.setAttribute("id", this.id + "autocomplete-list");
@@ -179,6 +185,14 @@ menuItemInput.addEventListener('input', function() {
         item.sku.toLowerCase().includes(inputValue) ||
         item.upc.includes(inputValue)
     );
+
+    console.log("Filtered items:", filteredItems.length, filteredItems); // <--- ADDED LINE
+
+    if (filteredItems.length === 0) { // <--- ADDED BLOCK
+        console.log("No matching items found."); // <--- ADDED LINE
+        return; // <--- ADDED LINE
+    } // <--- END ADDED BLOCK
+
 
     filteredItems.forEach(item => {
         let b = document.createElement("DIV");
@@ -193,6 +207,7 @@ menuItemInput.addEventListener('input', function() {
         });
         a.appendChild(b);
     });
+    console.log("Autocomplete list rendered."); // <--- ADDED LINE
 });
 
 function closeAllLists(elmnt) {
