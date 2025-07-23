@@ -1,4 +1,3 @@
-
 // --- 1. DATA: Your menu items (updated with SKU, Name, and UPC) ---
 const menuItems = [
     { sku: 'AMP0004', name: 'AMP 12oz Congo (WB)', upc: '8-54463-00818-5' },
