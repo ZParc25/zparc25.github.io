@@ -1,3 +1,152 @@
+// --- NEW: Store Location Data ---
+const storeLocations = [
+    {
+        name: "Sprouts Farmers Market 802",
+        id: "802",
+        address: "24 E 2nd St",
+        city: "Edmond",
+        state: "OK",
+        zip: "73034"
+    },
+    {
+        name: "Sprouts Farmers Market 803",
+        id: "803",
+        address: "559 W Main St",
+        city: "Norman",
+        state: "OK",
+        zip: "73069"
+    },
+    {
+        name: "Sprouts Farmers Market 801",
+        id: "801",
+        address: "6410 N May Ave",
+        city: "Oklahoma City",
+        state: "OK",
+        zip: "73116"
+    },
+    {
+        name: "Sprouts Farmers Market 808",
+        id: "808",
+        address: "12200 N Macarthur Blvd",
+        city: "Oklahoma City",
+        state: "OK",
+        zip: "73162"
+    },
+    {
+        name: "Sprouts Farmers Market 812",
+        id: "812",
+        address: "12100 S Pennsylvania Ave",
+        city: "Oklahoma City",
+        state: "OK",
+        zip: "73170"
+    },
+    {
+        name: "Sprouts Farmers Market 602",
+        id: "602",
+        address: "1375 S State St",
+        city: "Orem",
+        state: "UT",
+        zip: "84097"
+    },
+    {
+        name: "Whole Foods Market 10167",
+        id: "10167",
+        address: "3135 Washtenaw Ave",
+        city: "Ann Arbor",
+        state: "MI",
+        zip: "48104"
+    },
+    {
+        name: "Whole Foods Market 10315",
+        id: "10315",
+        address: "990 W Eisenhower Pkwy",
+        city: "Ann Arbor",
+        state: "MI",
+        zip: "48103"
+    },
+    {
+        name: "Whole Foods Market 10303",
+        id: "10303",
+        address: "1160 Town & Country Commons Dr",
+        city: "Chesterfield",
+        state: "MO",
+        zip: "63017"
+    },
+    {
+        name: "Whole Foods Market 10535",
+        id: "10535",
+        address: "4577 W Pine Blvd",
+        city: "Saint Louis",
+        state: "MO",
+        zip: "63108"
+    },
+    {
+        name: "Whole Foods Market 10376",
+        id: "10376",
+        address: "6001 N Western Ave",
+        city: "Oklahoma City",
+        state: "OK",
+        zip: "73118"
+    },
+    {
+        name: "Whole Foods Market 10280",
+        id: "10280",
+        address: "544 S 700 E",
+        city: "Salt Lake City",
+        state: "UT",
+        zip: "84102"
+    },
+    {
+        name: "Whole Foods Market 10415",
+        id: "10415",
+        address: "1131 E Wilmington Ave",
+        city: "Salt Lake City",
+        state: "UT",
+        zip: "84106"
+    },
+    {
+        name: "Whole Foods Market 10430",
+        id: "10430",
+        address: "6930 S Highland Dr",
+        city: "Salt Lake City",
+        state: "UT",
+        zip: "84121"
+    },
+    {
+        name: "Whole Foods Market 10646",
+        id: "10646",
+        address: "6598 N Landmark Dr",
+        city: "Park City",
+        state: "UT",
+        zip: "84098"
+    },
+    {
+        name: "Whole Foods Market", // Adjusted for cleaner data
+        id: "10694",
+        address: "5700 Penn Ave",
+        city: "Pittsburgh",
+        state: "PA",
+        zip: "15206"
+    },
+    {
+        name: "Whole Foods Market", // Adjusted for cleaner data
+        id: "10242",
+        address: "111 Siena Dr",
+        city: "Upper St Clair",
+        state: "PA",
+        zip: "15241 1318"
+    },
+    {
+        name: "Whole Foods Market", // Adjusted for cleaner data
+        id: "10377",
+        address: "10576 Perry Hwy",
+        city: "Wexford",
+        state: "PA",
+        zip: "15090 9244"
+    }
+];
+// --- END Store Location Data ---
+
 // --- 1. DATA: Your menu items (updated with SKU, Name, and UPC) ---
 const menuItems = [
     { sku: 'AMP0004', name: 'AMP 12oz Congo (WB)', upc: '8-54463-00818-5' },
@@ -159,15 +308,18 @@ const quantityInput = document.getElementById('quantity');
 const addItemBtn = document.getElementById('addItemBtn');
 const orderList = document.getElementById('orderList');
 const reviewSubmitBtn = document.getElementById('reviewSubmitBtn');
-const storeLocationSelect = document.getElementById('storeLocation');
+const storeLocationSelect = document.getElementById('storeLocation'); // Already exists
 
 let currentOrder = []; // Stores the selected items and their quantities
 
 // --- 3. Autocomplete Functionality ---
 menuItemInput.addEventListener('input', function() {
+    console.log("Input event fired! Current value:", this.value);
+
     const inputValue = this.value.toLowerCase();
     closeAllLists();
     if (!inputValue) {
+        console.log("Input value is empty, closing lists.");
         return false;
     }
 
@@ -182,7 +334,10 @@ menuItemInput.addEventListener('input', function() {
         item.upc.includes(inputValue)
     );
 
+    console.log("Filtered items:", filteredItems.length, filteredItems);
+
     if (filteredItems.length === 0) {
+        console.log("No matching items found.");
         return;
     }
 
@@ -200,6 +355,7 @@ menuItemInput.addEventListener('input', function() {
         });
         a.appendChild(b);
     });
+    console.log("Autocomplete list rendered.");
 });
 
 function closeAllLists(elmnt) {
@@ -316,7 +472,7 @@ reviewSubmitBtn.addEventListener('click', function() {
     });
 
     const orderDetails = {
-        store: storeLocation,
+        storeId: storeLocation, // Changed 'store' to 'storeId' for clarity
         items: items
     };
 
@@ -327,4 +483,30 @@ reviewSubmitBtn.addEventListener('click', function() {
     storeLocationSelect.value = "";
     orderList.innerHTML = "";
     currentOrder = [];
+});
+
+// --- NEW: Populate Store Location Dropdown on Load ---
+document.addEventListener('DOMContentLoaded', () => {
+    // This part ensures the store dropdown is populated when the page loads
+    // and correctly hides the info box if it was part of an earlier example.
+    const storeLocationSelect = document.getElementById('storeLocation');
+
+    if (storeLocationSelect) { // Check if the element exists
+        // Clear any placeholder options that might be in the HTML
+        storeLocationSelect.innerHTML = '<option value="">Select a Store</option>';
+
+        storeLocations.forEach(store => {
+            const option = document.createElement('option');
+            option.value = store.id; // This is the ID that will be used when selected
+            option.textContent = `${store.name} - ${store.address}, ${store.city}, ${store.state} ${store.zip}`; // What the user sees
+            storeLocationSelect.appendChild(option);
+        });
+    }
+
+    // If you had an #selectedStoreInfo box from a previous example that you want to hide,
+    // you would uncomment and use this:
+    // const selectedStoreInfoBox = document.getElementById('selectedStoreInfo');
+    // if (selectedStoreInfoBox) {
+    //     selectedStoreInfoBox.style.display = 'none';
+    // }
 });
