@@ -1,4 +1,4 @@
-// --- NEW: Store Location Data ---
+// --- Store Location Data ---
 const storeLocations = [
     {
         name: "Sprouts Farmers Market 802",
@@ -121,7 +121,7 @@ const storeLocations = [
         zip: "84098"
     },
     {
-        name: "Whole Foods Market", // Adjusted for cleaner data
+        name: "Whole Foods Market",
         id: "10694",
         address: "5700 Penn Ave",
         city: "Pittsburgh",
@@ -129,7 +129,7 @@ const storeLocations = [
         zip: "15206"
     },
     {
-        name: "Whole Foods Market", // Adjusted for cleaner data
+        name: "Whole Foods Market",
         id: "10242",
         address: "111 Siena Dr",
         city: "Upper St Clair",
@@ -137,7 +137,7 @@ const storeLocations = [
         zip: "15241 1318"
     },
     {
-        name: "Whole Foods Market", // Adjusted for cleaner data
+        name: "Whole Foods Market",
         id: "10377",
         address: "10576 Perry Hwy",
         city: "Wexford",
@@ -145,9 +145,8 @@ const storeLocations = [
         zip: "15090 9244"
     }
 ];
-// --- END Store Location Data ---
 
-// --- 1. DATA: Your menu items (updated with SKU, Name, and UPC) ---
+// --- Menu Items Data ---
 const menuItems = [
     { sku: 'AMP0004', name: 'AMP 12oz Congo (WB)', upc: '8-54463-00818-5' },
     { sku: 'AMP0005', name: 'AMP 12oz Honduras (WB)', upc: '8-54463-00802-4' },
@@ -301,7 +300,7 @@ const menuItems = [
     { sku: 'VRV0007', name: 'VRV 12oz Streetlevel (WB)', upc: '8-99296-00212-2' }
 ];
 
-// --- 2. DOM Elements ---
+// --- DOM Elements ---
 const menuItemInput = document.getElementById('menuItem');
 const autocompleteList = document.getElementById('autocomplete-list');
 const quantityInput = document.getElementById('quantity');
@@ -312,7 +311,7 @@ const storeLocationSelect = document.getElementById('storeLocation');
 
 let currentOrder = []; // Stores the selected items and their quantities
 
-// --- 3. Autocomplete Functionality for Menu Items ---
+// --- Autocomplete Functionality for Menu Items ---
 menuItemInput.addEventListener('input', function() {
     const inputValue = this.value.toLowerCase();
     closeAllLists();
@@ -320,10 +319,16 @@ menuItemInput.addEventListener('input', function() {
         return false;
     }
 
-    let a = document.createElement("DIV");
-    a.setAttribute("id", this.id + "autocomplete-list");
-    a.setAttribute("class", "autocomplete-items");
-    this.parentNode.appendChild(a);
+    // Create the autocomplete list container div if it doesn't exist or is removed
+    let a = document.getElementById(this.id + "autocomplete-list");
+    if (!a) {
+        a = document.createElement("DIV");
+        a.setAttribute("id", this.id + "autocomplete-list");
+        a.setAttribute("class", "autocomplete-items");
+        this.parentNode.appendChild(a);
+    } else {
+        a.innerHTML = ""; // Clear previous suggestions
+    }
 
     const filteredItems = menuItems.filter(item =>
         item.name.toLowerCase().includes(inputValue) ||
@@ -363,7 +368,7 @@ document.addEventListener("click", function (e) {
     closeAllLists(e.target);
 });
 
-// --- 4. Add Item to Order ---
+// --- Add Item to Order ---
 addItemBtn.addEventListener('click', function() {
     const selectedItemName = menuItemInput.value.trim();
     const selectedItemSku = menuItemInput.dataset.sku;
@@ -440,7 +445,7 @@ addItemBtn.addEventListener('click', function() {
     quantityInput.value = 1;
 });
 
-// --- 5. Review and Submit Order ---
+// --- Review and Submit Order ---
 reviewSubmitBtn.addEventListener('click', function() {
     const storeLocation = storeLocationSelect.value;
 
@@ -477,7 +482,7 @@ reviewSubmitBtn.addEventListener('click', function() {
     currentOrder = [];
 });
 
-// --- NEW: Populate Store Location Dropdown on Load ---
+// --- Populate Store Location Dropdown on Load ---
 document.addEventListener('DOMContentLoaded', () => {
     const storeLocationSelect = document.getElementById('storeLocation');
 
