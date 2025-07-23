@@ -308,18 +308,15 @@ const quantityInput = document.getElementById('quantity');
 const addItemBtn = document.getElementById('addItemBtn');
 const orderList = document.getElementById('orderList');
 const reviewSubmitBtn = document.getElementById('reviewSubmitBtn');
-const storeLocationSelect = document.getElementById('storeLocation'); // Already exists
+const storeLocationSelect = document.getElementById('storeLocation');
 
 let currentOrder = []; // Stores the selected items and their quantities
 
-// --- 3. Autocomplete Functionality ---
+// --- 3. Autocomplete Functionality for Menu Items ---
 menuItemInput.addEventListener('input', function() {
-    console.log("Input event fired! Current value:", this.value);
-
     const inputValue = this.value.toLowerCase();
     closeAllLists();
     if (!inputValue) {
-        console.log("Input value is empty, closing lists.");
         return false;
     }
 
@@ -334,13 +331,9 @@ menuItemInput.addEventListener('input', function() {
         item.upc.includes(inputValue)
     );
 
-    console.log("Filtered items:", filteredItems.length, filteredItems);
-
     if (filteredItems.length === 0) {
-        console.log("No matching items found.");
         return;
     }
-
 
     filteredItems.forEach(item => {
         let b = document.createElement("DIV");
@@ -355,7 +348,6 @@ menuItemInput.addEventListener('input', function() {
         });
         a.appendChild(b);
     });
-    console.log("Autocomplete list rendered.");
 });
 
 function closeAllLists(elmnt) {
@@ -472,7 +464,7 @@ reviewSubmitBtn.addEventListener('click', function() {
     });
 
     const orderDetails = {
-        storeId: storeLocation, // Changed 'store' to 'storeId' for clarity
+        storeId: storeLocation,
         items: items
     };
 
@@ -487,8 +479,6 @@ reviewSubmitBtn.addEventListener('click', function() {
 
 // --- NEW: Populate Store Location Dropdown on Load ---
 document.addEventListener('DOMContentLoaded', () => {
-    // This part ensures the store dropdown is populated when the page loads
-    // and correctly hides the info box if it was part of an earlier example.
     const storeLocationSelect = document.getElementById('storeLocation');
 
     if (storeLocationSelect) { // Check if the element exists
@@ -498,15 +488,9 @@ document.addEventListener('DOMContentLoaded', () => {
         storeLocations.forEach(store => {
             const option = document.createElement('option');
             option.value = store.id; // This is the ID that will be used when selected
-            option.textContent = `${store.name} - ${store.address}, ${store.city}, ${store.state} ${store.zip}`; // What the user sees
+            // Display full store information in the dropdown
+            option.textContent = `${store.name} - ${store.address}, ${store.city}, ${store.state} ${store.zip}`;
             storeLocationSelect.appendChild(option);
         });
     }
-
-    // If you had an #selectedStoreInfo box from a previous example that you want to hide,
-    // you would uncomment and use this:
-    // const selectedStoreInfoBox = document.getElementById('selectedStoreInfo');
-    // if (selectedStoreInfoBox) {
-    //     selectedStoreInfoBox.style.display = 'none';
-    // }
 });
