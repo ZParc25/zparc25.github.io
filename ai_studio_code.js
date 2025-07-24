@@ -308,11 +308,12 @@ const addItemBtn = document.getElementById('addItemBtn');
 const orderList = document.getElementById('orderList');
 const reviewSubmitBtn = document.getElementById('reviewSubmitBtn');
 const storeLocationSelect = document.getElementById('storeLocation');
+const selectedStoreDisplay = document.getElementById('selectedStoreDisplay'); // New element for store name display
 
 let currentOrder = []; // Stores the selected items and their quantities
 
 // ** IMPORTANT: Replace this with your actual Google Apps Script Web App URL **
-const GOOGLE_SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwq21v421x24wVaaZHkbaG6_em7dVwR8FG1PxjN4AFtAEH1riaPjY5PCGUhOilIzECS/exec';
+const GOOGLE_SHEET_WEB_APP_URL = 'https://script.google.com/a/macros/instawork.com/s/AKfycbwq21v421x24wVaaZHkbaG6_em7dVwR8FG1PxjN4AFtAEH1riaPjY5PCGUhOilIzECS/exec';
 
 
 // --- Autocomplete Functionality for Menu Items ---
@@ -422,6 +423,10 @@ addItemBtn.addEventListener('click', function() {
             removeBtn.addEventListener('click', function() {
                 orderList.removeChild(listItem);
                 currentOrder = currentOrder.filter(orderItem => orderItem.sku !== listItem.dataset.sku);
+                // If the order becomes empty, clear the store display as well
+                if (currentOrder.length === 0) {
+                    selectedStoreDisplay.textContent = '';
+                }
             });
             controlsDiv.appendChild(removeBtn);
 
@@ -507,7 +512,7 @@ reviewSubmitBtn.addEventListener('click', async function() {
         alert("Failed to submit order to Google Sheet. Please check the console for errors.");
     }
 
-    // Clear the form after submission attempt
+    // Clear the form and store display after submission attempt
     storeLocationSelect.value = "";
     orderList.innerHTML = "";
     currentOrder = [];
@@ -515,6 +520,7 @@ reviewSubmitBtn.addEventListener('click', async function() {
     delete menuItemInput.dataset.sku;
     delete menuItemInput.dataset.upc;
     quantityInput.value = 1;
+    selectedStoreDisplay.textContent = ''; // Clear the selected store display
 });
 
 // --- Populate Store Location Dropdown on Load ---
@@ -531,4 +537,20 @@ document.addEventListener('DOMContentLoaded', () => {
             storeLocationSelect.appendChild(option);
         });
     }
+
+    // Add event listener to update store display when selection changes
+    storeLocationSelect.addEventListener('change', function() {
+        const selectedStoreId = this.value;
+        if (selectedStoreId) {
+            const selectedStore = storeLocations.find(store => store.id === selectedStoreId);
+            if (selectedStore) {
+                selectedStoreDisplay.textContent = `Order for: ${selectedStore.name}`;
+            }
+        } else {
+            selectedStoreDisplay.textContent = ''; // Clear if no store is selected
+        }
+        // Clear the order list if the store changes
+        orderList.innerHTML = "";
+        currentOrder = [];
+    });
 });
