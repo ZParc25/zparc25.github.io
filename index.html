@@ -15,7 +15,7 @@
                 <label for="storeLocation">Store Location:</label>
                 <select id="storeLocation" required>
                     <option value="">Select a Store</option>
-                    </select>
+                </select>
             </div>
 
             <div class="form-group">
@@ -32,8 +32,10 @@
             <button type="button" id="addItemBtn">Add to Order</button>
 
             <h2>Current Order:</h2>
+            <!-- New element to display the selected store name -->
+            <p id="selectedStoreDisplay" class="text-center text-gray-700 font-semibold mb-2"></p>
             <ul id="orderList">
-                </ul>
+            </ul>
 
             <button type="button" id="reviewSubmitBtn">Review and Submit Order</button>
         </form>
