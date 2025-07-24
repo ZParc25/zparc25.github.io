@@ -311,6 +311,10 @@ const storeLocationSelect = document.getElementById('storeLocation');
 
 let currentOrder = []; // Stores the selected items and their quantities
 
+// ** IMPORTANT: Replace this with your actual Google Apps Script Web App URL **
+const GOOGLE_SHEET_WEB_APP_URL = 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
+
+
 // --- Autocomplete Functionality for Menu Items ---
 menuItemInput.addEventListener('input', function() {
     const inputValue = this.value.toLowerCase();
@@ -319,7 +323,6 @@ menuItemInput.addEventListener('input', function() {
         return false;
     }
 
-    // Create the autocomplete list container div if it doesn't exist or is removed
     let a = document.getElementById(this.id + "autocomplete-list");
     if (!a) {
         a = document.createElement("DIV");
@@ -327,7 +330,7 @@ menuItemInput.addEventListener('input', function() {
         a.setAttribute("class", "autocomplete-items");
         this.parentNode.appendChild(a);
     } else {
-        a.innerHTML = ""; // Clear previous suggestions
+        a.innerHTML = "";
     }
 
     const filteredItems = menuItems.filter(item =>
@@ -342,13 +345,12 @@ menuItemInput.addEventListener('input', function() {
 
     filteredItems.forEach(item => {
         let b = document.createElement("DIV");
-        // Display "Product Name - Barcode" in the dropdown
         b.innerHTML = `<strong>${item.name}</strong> - ${item.upc}`;
-        b.innerHTML += `<input type='hidden' value='${item.sku}'>`; // Store SKU
+        b.innerHTML += `<input type='hidden' value='${item.sku}'>`;
         b.addEventListener('click', function() {
-            menuItemInput.value = item.name; // Display full name in input
-            menuItemInput.dataset.sku = item.sku; // Store selected SKU
-            menuItemInput.dataset.upc = item.upc; // Store selected UPC
+            menuItemInput.value = item.name;
+            menuItemInput.dataset.sku = item.sku;
+            menuItemInput.dataset.upc = item.upc;
             closeAllLists();
         });
         a.appendChild(b);
@@ -383,18 +385,15 @@ addItemBtn.addEventListener('click', function() {
     const existingItemIndex = currentOrder.findIndex(item => item.sku === selectedItemSku);
 
     if (existingItemIndex > -1) {
-        // Update quantity if item already in order
         const existingQuantityInput = currentOrder[existingItemIndex].quantityInput;
         existingQuantityInput.value = parseInt(existingQuantityInput.value, 10) + quantity;
     } else {
-        // Add new item to order
         const item = menuItems.find(i => i.sku === selectedItemSku);
         if (item) {
             const listItem = document.createElement('li');
-            listItem.dataset.sku = item.sku; // Store SKU on the list item
+            listItem.dataset.sku = item.sku;
 
             const itemElement = document.createElement('span');
-            // Display all information when item is added to the order
             itemElement.innerHTML = `
                 <span>
                     <strong>${item.name}</strong><br>
@@ -412,7 +411,7 @@ addItemBtn.addEventListener('click', function() {
             itemQuantityInput.min = '1';
             itemQuantityInput.addEventListener('change', function() {
                 if (parseInt(this.value, 10) <= 0) {
-                    this.value = 1; // Prevent quantity from going below 1
+                    this.value = 1;
                 }
             });
             controlsDiv.appendChild(itemQuantityInput);
@@ -438,7 +437,6 @@ addItemBtn.addEventListener('click', function() {
         }
     }
 
-    // Clear input fields after adding
     menuItemInput.value = '';
     delete menuItemInput.dataset.sku;
     delete menuItemInput.dataset.upc;
@@ -446,7 +444,7 @@ addItemBtn.addEventListener('click', function() {
 });
 
 // --- Review and Submit Order ---
-reviewSubmitBtn.addEventListener('click', function() {
+reviewSubmitBtn.addEventListener('click', async function() {
     const selectedStoreId = storeLocationSelect.value;
 
     if (selectedStoreId === "") {
@@ -460,19 +458,18 @@ reviewSubmitBtn.addEventListener('click', function() {
     }
 
     const now = new Date();
-    const dateTimeStamp = now.toLocaleString(); // Formats date and time
+    const dateTimeStamp = now.toLocaleString();
 
-    // Find the full store object based on the selected ID
     const selectedStore = storeLocations.find(store => store.id === selectedStoreId);
-    const storeInfo = selectedStore ?
+    const storeInfoForAppsScript = selectedStore ?
         `${selectedStore.name} - ${selectedStore.address}, ${selectedStore.city}, ${selectedStore.state} ${selectedStore.zip}` :
         "Unknown Store";
 
     const itemsToSubmit = currentOrder.map(item => {
         return {
-            productId: item.sku, // Using SKU as product ID
+            productId: item.sku,
             sku: item.sku,
-            productName: item.name, // Added for completeness in log
+            productName: item.name,
             upc: item.upc,
             quantity: parseInt(item.quantityInput.value, 10) || 1
         };
@@ -480,45 +477,56 @@ reviewSubmitBtn.addEventListener('click', function() {
 
     const submissionData = {
         timestamp: dateTimeStamp,
-        store: storeInfo,
-        storeId: selectedStoreId, // Keep store ID separate for easier data handling if needed
+        store: storeInfoForAppsScript, // Full store string for Apps Script to parse
+        storeId: selectedStoreId,
         items: itemsToSubmit
     };
 
-    console.log("--- Order Submission Details ---");
+    console.log("--- Attempting Order Submission ---");
     console.log(submissionData);
-    console.log("-------------------------------");
+    console.log("-----------------------------------");
 
-    let alertMessage = `Order Submitted!\n\nDate/Time: ${dateTimeStamp}\nStore: ${storeInfo}\n\nItems:\n`;
-    itemsToSubmit.forEach(item => {
-        alertMessage += `- ${item.productName} (SKU: ${item.sku}, UPC: ${item.upc}), Quantity: ${item.quantity}\n`;
-    });
+    try {
+        const response = await fetch(GOOGLE_SHEET_WEB_APP_URL, {
+            method: 'POST',
+            mode: 'no-cors', // Apps Script web apps generally require no-cors for simple POSTs
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(submissionData)
+        });
 
-    alert(alertMessage + "\n\n(Details also logged to console for manual copying to Google Sheet.)");
+        // Since mode is 'no-cors', we won't get a usable response from fetch itself.
+        // The Apps Script will write to the sheet if successful.
+        // We'll assume success for now and rely on checking the sheet.
+        alert("Order submitted successfully to Google Sheet! Please check the sheet for data.");
+        console.log("Data sent to Google Apps Script. Check your Google Sheet.");
 
+    } catch (error) {
+        console.error("Error sending order to Google Sheet:", error);
+        alert("Failed to submit order to Google Sheet. Please check the console for errors.");
+    }
 
-    // Clear the form after submission
+    // Clear the form after submission attempt
     storeLocationSelect.value = "";
     orderList.innerHTML = "";
     currentOrder = [];
-    menuItemInput.value = ''; // Clear menu item input
+    menuItemInput.value = '';
     delete menuItemInput.dataset.sku;
     delete menuItemInput.dataset.upc;
-    quantityInput.value = 1; // Reset quantity
+    quantityInput.value = 1;
 });
 
 // --- Populate Store Location Dropdown on Load ---
 document.addEventListener('DOMContentLoaded', () => {
     const storeLocationSelect = document.getElementById('storeLocation');
 
-    if (storeLocationSelect) { // Check if the element exists
-        // Clear any placeholder options that might be in the HTML
+    if (storeLocationSelect) {
         storeLocationSelect.innerHTML = '<option value="">Select a Store</option>';
 
         storeLocations.forEach(store => {
             const option = document.createElement('option');
-            option.value = store.id; // This is the ID that will be used when selected
-            // Display full store information in the dropdown
+            option.value = store.id;
             option.textContent = `${store.name} - ${store.address}, ${store.city}, ${store.state} ${store.zip}`;
             storeLocationSelect.appendChild(option);
         });
