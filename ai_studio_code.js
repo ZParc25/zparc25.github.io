@@ -447,9 +447,9 @@ addItemBtn.addEventListener('click', function() {
 
 // --- Review and Submit Order ---
 reviewSubmitBtn.addEventListener('click', function() {
-    const storeLocation = storeLocationSelect.value;
+    const selectedStoreId = storeLocationSelect.value;
 
-    if (storeLocation === "") {
+    if (selectedStoreId === "") {
         alert("Please select a store location.");
         return;
     }
@@ -459,27 +459,52 @@ reviewSubmitBtn.addEventListener('click', function() {
         return;
     }
 
-    const items = currentOrder.map(item => {
+    const now = new Date();
+    const dateTimeStamp = now.toLocaleString(); // Formats date and time
+
+    // Find the full store object based on the selected ID
+    const selectedStore = storeLocations.find(store => store.id === selectedStoreId);
+    const storeInfo = selectedStore ?
+        `${selectedStore.name} - ${selectedStore.address}, ${selectedStore.city}, ${selectedStore.state} ${selectedStore.zip}` :
+        "Unknown Store";
+
+    const itemsToSubmit = currentOrder.map(item => {
         return {
+            productId: item.sku, // Using SKU as product ID
             sku: item.sku,
-            name: item.name,
+            productName: item.name, // Added for completeness in log
             upc: item.upc,
             quantity: parseInt(item.quantityInput.value, 10) || 1
         };
     });
 
-    const orderDetails = {
-        storeId: storeLocation,
-        items: items
+    const submissionData = {
+        timestamp: dateTimeStamp,
+        store: storeInfo,
+        storeId: selectedStoreId, // Keep store ID separate for easier data handling if needed
+        items: itemsToSubmit
     };
 
-    console.log("Order Details:", orderDetails);
-    alert("Order submitted! Check the console for details.");
+    console.log("--- Order Submission Details ---");
+    console.log(submissionData);
+    console.log("-------------------------------");
+
+    let alertMessage = `Order Submitted!\n\nDate/Time: ${dateTimeStamp}\nStore: ${storeInfo}\n\nItems:\n`;
+    itemsToSubmit.forEach(item => {
+        alertMessage += `- ${item.productName} (SKU: ${item.sku}, UPC: ${item.upc}), Quantity: ${item.quantity}\n`;
+    });
+
+    alert(alertMessage + "\n\n(Details also logged to console for manual copying to Google Sheet.)");
+
 
     // Clear the form after submission
     storeLocationSelect.value = "";
     orderList.innerHTML = "";
     currentOrder = [];
+    menuItemInput.value = ''; // Clear menu item input
+    delete menuItemInput.dataset.sku;
+    delete menuItemInput.dataset.upc;
+    quantityInput.value = 1; // Reset quantity
 });
 
 // --- Populate Store Location Dropdown on Load ---
