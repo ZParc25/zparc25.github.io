@@ -312,7 +312,7 @@ const storeLocationSelect = document.getElementById('storeLocation');
 let currentOrder = []; // Stores the selected items and their quantities
 
 // ** IMPORTANT: Replace this with your actual Google Apps Script Web App URL **
-const GOOGLE_SHEET_WEB_APP_URL = 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
+const GOOGLE_SHEET_WEB_APP_URL = 'https://script.google.com/a/macros/instawork.com/s/AKfycbwq21v421x24wVaaZHkbaG6_em7dVwR8FG1PxjN4AFtAEH1riaPjY5PCGUhOilIzECS/exec';
 
 
 // --- Autocomplete Functionality for Menu Items ---
